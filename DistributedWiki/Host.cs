@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Reflection.Metadata;
 using System.Text;
 
 namespace DistributedWiki {
@@ -8,13 +10,18 @@ namespace DistributedWiki {
 		private HttpListener httpListener;
 
 
-		public List<Page> pages { get; set; } = new List<Page>();
+		public RequestHandler requestHandler { get; set; }
 
+		public Template template { get; set; }
+		public DataSource dataSource { get; set; }
 
-		public Host() {
+		public Host(Template template, DataSource dataSource) {
 			httpListener = new HttpListener();
 			httpListener.Prefixes.Add("http://*:80/");
-			
+
+			requestHandler = new RequestHandler(this);
+			this.dataSource = dataSource;
+			this.template = template;
 		}
 
 
@@ -26,21 +33,18 @@ namespace DistributedWiki {
 			while (true) {
 				HttpListenerContext context = httpListener.GetContext();
 				HttpListenerRequest request = context.Request;
-				// Obtain a response object.
 				HttpListenerResponse response = context.Response;
-				// Construct a response.
-				string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
+
+				string responseString = requestHandler.fulfillRequest(request);
 				byte[] buffer = Encoding.UTF8.GetBytes(responseString);
+
 				// Get a response stream and write the response to it.
 				response.ContentLength64 = buffer.Length;
-				System.IO.Stream output = response.OutputStream;
-				output.Write(buffer,0,buffer.Length);
-				// You must close the output stream.
-				output.Close();
+
+				using (Stream output = response.OutputStream) {
+					output.Write(buffer,0,buffer.Length);
+				}
 			}
-
-
-
 
 		}
 
