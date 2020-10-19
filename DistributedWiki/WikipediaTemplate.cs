@@ -11,8 +11,6 @@ namespace DistributedWiki {
 			stringBuilder.Append("<head>");
 
 
-
-			
 			stringBuilder.Append("<head>");
 			return stringBuilder.ToString();
 		}
@@ -21,8 +19,7 @@ namespace DistributedWiki {
 			StringBuilder stringBuilder = new StringBuilder();
 			stringBuilder.Append("<body>");
 			
-
-
+			stringBuilder.Append($"<span>{page.text}</span>");
 
 			stringBuilder.Append("</body>");
 			return stringBuilder.ToString();

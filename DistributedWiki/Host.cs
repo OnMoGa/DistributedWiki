@@ -42,7 +42,12 @@ namespace DistributedWiki {
 				response.ContentLength64 = buffer.Length;
 
 				using (Stream output = response.OutputStream) {
-					output.Write(buffer,0,buffer.Length);
+					try {
+						output.Write(buffer,0,buffer.Length);
+					} catch (HttpListenerException e) {
+
+					}
+					
 				}
 			}
 

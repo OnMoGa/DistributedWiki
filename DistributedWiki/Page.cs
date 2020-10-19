@@ -9,7 +9,7 @@ namespace DistributedWiki {
 		public int id { get; set; }
 		public string title { get; set; }
 		public string path { get; set; }
-		public string timestamp { get; set; }
+		public DateTime timestamp { get; set; }
 		public string text { get; set; }
 
 		[JsonIgnore]

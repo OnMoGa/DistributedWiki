@@ -13,16 +13,19 @@ namespace DistributedWiki {
 		public DirectoryInfo path { get; set; }
 
 		public DiskStorage(DirectoryInfo path) {
+			if (!path.Exists) {
+				path.Create();
+			}
 			this.path=path;
 		}
 
 		public override Page getPage(string title) {
 
-			FileInfo file = path.GetFiles()
-								 .FirstOrDefault(f => f.Name == $"{title}.json");
-			Page page = null;
+			FileInfo file = path.GetFiles().FirstOrDefault(f => f.Name.Equals($"{title}.json", StringComparison.InvariantCultureIgnoreCase));
+			Page page;
 			if (file != null) {
-				string json = File.ReadAllText(file.DirectoryName);
+				string fileName = $"{title.ToLower()}.json";
+				string json = File.ReadAllText(Path.Combine(path.FullName, fileName));
 				page = JsonConvert.DeserializeObject<Page>(json);
 				return page;
 			}
@@ -37,7 +40,7 @@ namespace DistributedWiki {
 
 		public override void savePage(Page page) {
 			string fileName = $"{page.title}.json";
-			string fullPath = path + fileName;
+			string fullPath = Path.Combine(path.FullName, fileName);
 			string json = page.toJson();
 
 			using (StreamWriter file = new StreamWriter(fullPath, false)) {

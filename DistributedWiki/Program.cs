@@ -8,7 +8,7 @@ namespace DistributedWiki {
 
 			DataSource dataSource = new MemoryStorage() {
 				backup = new DiskStorage(new DirectoryInfo(@"C:\Users\Michael\Desktop\wikipages")) {
-					backup = new PoolStorage() {
+					backup = new PoolStorage(new UriBuilder("192.168.0.100").Uri) {
 						backup = new OriginStorage()
 					}
 				}

@@ -33,7 +33,7 @@ namespace DistributedWiki {
 			{
 				0 => getHomePage(),
 				1 => getRootResources(),
-				_ => getPage(urlSegments)
+				_ => getPage(urlSegments, request)
 			};
 		}
 
@@ -47,9 +47,10 @@ namespace DistributedWiki {
 			return "Content Missing";
 		}
 
-		private string getPage(List<string> urlSegments) {
+		private string getPage(List<string> urlSegments, HttpListenerRequest request) {
 			return urlSegments[0] switch {
-				"wiki" => getWikiPage(urlSegments.Skip(1).ToList()).html,
+				"wiki" => getWikiPage(urlSegments.Skip(1).ToList()).text,
+				"data" => getWikiPage(urlSegments.Skip(1).ToList()).toJson(),
 				_ => "Resource Not Found"
 			};
 		}

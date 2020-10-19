@@ -4,6 +4,16 @@ using System.Text;
 
 namespace DistributedWiki {
 	class PoolStorage : DataSource {
+
+		public Pool pool { get; set; }
+
+		public PoolStorage(Uri tracker) {
+			pool = new Pool() {
+				tracker = tracker
+			};
+		}
+
+
 		public override Page getPage(string title) {
 			return backup.getPage(title);
 		}

@@ -10,7 +10,7 @@ namespace DistributedWiki {
 		public List<Page> pages { get; set; } = new List<Page>();
 
 		public override Page getPage(string title) {
-			Page page = pages.FirstOrDefault(p => p.title == title);
+			Page page = pages.FirstOrDefault(p => p.title.Equals(title, StringComparison.InvariantCultureIgnoreCase));
 
 			if(page == null) {
 				page = backup.getPage(title);
