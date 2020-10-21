@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using DistributedWiki.Messages;
 
 namespace DistributedWiki {
 	abstract class DataSource {
@@ -9,7 +10,7 @@ namespace DistributedWiki {
 		public DataSource backup { get; set; }
 
 
-		public abstract Page getPage(string title);
+		public abstract Page getPage(PageRequestMessage pageRequest);
 		public abstract void savePage(Page page);
 
 	}

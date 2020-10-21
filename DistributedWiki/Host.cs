@@ -14,14 +14,18 @@ namespace DistributedWiki {
 
 		public Template template { get; set; }
 		public DataSource dataSource { get; set; }
+		public Pool pool { get; set; }
+		public readonly Uri localUri;
 
-		public Host(Template template, DataSource dataSource) {
+		public Host(Uri localUri, Template template, DataSource dataSource, Pool pool) {
 			httpListener = new HttpListener();
-			httpListener.Prefixes.Add("http://*:80/");
+			httpListener.Prefixes.Add($"http://*:{localUri.Port}/");
 
 			requestHandler = new RequestHandler(this);
 			this.dataSource = dataSource;
 			this.template = template;
+			this.pool = pool;
+			this.localUri = localUri;
 		}
 
 
@@ -35,7 +39,7 @@ namespace DistributedWiki {
 				HttpListenerRequest request = context.Request;
 				HttpListenerResponse response = context.Response;
 
-				string responseString = requestHandler.fulfillRequest(request);
+				string responseString = requestHandler.handleRequest(request);
 				byte[] buffer = Encoding.UTF8.GetBytes(responseString);
 
 				// Get a response stream and write the response to it.

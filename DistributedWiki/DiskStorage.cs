@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
+using DistributedWiki.Messages;
 using Newtonsoft.Json;
 
 namespace DistributedWiki {
@@ -19,20 +20,23 @@ namespace DistributedWiki {
 			this.path=path;
 		}
 
-		public override Page getPage(string title) {
+		public override Page getPage(PageRequestMessage pageRequest) {
+			Logger.log($"Getting {pageRequest.title} page from disk");
+			FileInfo file = path.GetFiles().FirstOrDefault(f => f.Name.Equals($"{pageRequest.title}.json", StringComparison.InvariantCultureIgnoreCase));
+			Page page = null;
 
-			FileInfo file = path.GetFiles().FirstOrDefault(f => f.Name.Equals($"{title}.json", StringComparison.InvariantCultureIgnoreCase));
-			Page page;
 			if (file != null) {
-				string fileName = $"{title.ToLower()}.json";
+				string fileName = $"{pageRequest.title.ToLower()}.json";
 				string json = File.ReadAllText(Path.Combine(path.FullName, fileName));
 				page = JsonConvert.DeserializeObject<Page>(json);
-				return page;
 			}
 
-			page = backup.getPage(title);
-			if (page != null) {
-				savePage(page);
+			if (file == null) {
+				Logger.log($"{pageRequest.title} page not on disk");
+				page = backup?.getPage(pageRequest);
+				if (page != null) {
+					savePage(page);
+				}
 			}
 
 			return page;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Xml;
+using DistributedWiki.Messages;
 
 namespace DistributedWiki {
 	class OriginStorage : DataSource {
@@ -10,12 +11,12 @@ namespace DistributedWiki {
 
 		private static readonly HttpClient client = new HttpClient();
 
-		public override Page getPage(string title) {
-			
+		public override Page getPage(PageRequestMessage pageRequest) {
+			Logger.log($"Getting {pageRequest.title} page from source");
 
 			Dictionary<string, string> values = new Dictionary<string, string>
 			{
-				{ "pages", title },
+				{ "pages", pageRequest.title },
 				{ "curonly", "1" }
 			};
 
