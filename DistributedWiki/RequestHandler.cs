@@ -55,7 +55,7 @@ namespace DistributedWiki {
 			return urlSegments.First() switch {
 				"wiki" => getWikiPage(urlSegments.Skip(1).ToList(), request).text,
 				"data" => getWikiPage(urlSegments.Skip(1).ToList(), request).toJson(),
-				"pool" => processPoolRequest(urlSegments.Skip(1).ToList(), request),
+				"pool" => pool == null ? "Server is not connected to pool" : processPoolRequest(urlSegments.Skip(1).ToList(), request),
 				_ => "Resource Not Found"
 			};
 		}

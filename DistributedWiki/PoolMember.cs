@@ -11,7 +11,7 @@ namespace DistributedWiki {
 		public List<string> pageTitles { get; set; } = new List<string>();
 
 		public override string ToString() {
-			return uri.ToString().Insert(uri.ToString().Length - 1, $":{uri.Port}");
+			return uri.toStringWithPort();
 		}
 
 		public override bool Equals(object obj) {

@@ -56,9 +56,10 @@ namespace DistributedWiki {
 			Host host = new Host(
 				localUri,
 				new WikipediaTemplate(),
-				memoryStorage,
-				pool
-			);
+				memoryStorage
+			) {
+				pool = pool
+			};
 
 
 			host.run();

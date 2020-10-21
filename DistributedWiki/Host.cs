@@ -17,21 +17,26 @@ namespace DistributedWiki {
 		public Pool pool { get; set; }
 		public readonly Uri localUri;
 
-		public Host(Uri localUri, Template template, DataSource dataSource, Pool pool) {
+		public Host(Uri localUri, Template template, DataSource dataSource) {
 			httpListener = new HttpListener();
 			httpListener.Prefixes.Add($"http://*:{localUri.Port}/");
 
 			requestHandler = new RequestHandler(this);
 			this.dataSource = dataSource;
 			this.template = template;
-			this.pool = pool;
 			this.localUri = localUri;
 		}
 
 
 
 		public void run() {
-			httpListener.Start();
+			try {
+				httpListener.Start();
+			} catch (HttpListenerException e) {
+				Logger.logError($"Use of port {localUri.Port} is denied");
+				Console.ReadLine();
+				Environment.Exit(1);
+			}
 			Console.WriteLine("Listening...");
 
 			while (true) {
